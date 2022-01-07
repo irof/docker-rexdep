@@ -1,0 +1,19 @@
+FROM ubuntu:20.04
+
+WORKDIR /home
+
+ARG REXDEP_VERSION=0.3.2
+ARG REXDEP_MODULE=rexdep_v${REXDEP_VERSION}_linux_amd64
+ARG REXDEP_ARCHIVE_URL=https://github.com/itchyny/rexdep/releases/download/v${REXDEP_VERSION}/${REXDEP_MODULE}.tar.gz
+
+RUN apt update \
+  && apt install -y curl graphviz \
+  && curl -LO ${REXDEP_ARCHIVE_URL} \
+  && tar xvf ${REXDEP_MODULE}.tar.gz \
+  && mv ${REXDEP_MODULE} /opt \
+  && ln -s /opt/${REXDEP_MODULE}/rexdep /usr/local/bin/rexdep \
+  && rm ${REXDEP_MODULE}.tar.gz \
+  && rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["rexdep"]
+
